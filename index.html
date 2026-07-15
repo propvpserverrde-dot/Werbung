@@ -1,211 +1,458 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ServerHub</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DrevSmp – Vote</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
 
-<style>
-body{
-    margin:0;
-    font-family:Arial,sans-serif;
-    background:linear-gradient(135deg,#050505,#1e40af);
-    color:white;
-}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.container{
-    max-width:900px;
-    margin:50px auto;
-    padding:30px;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-image:
+        radial-gradient(ellipse at 20% 50%, rgba(150, 0, 0, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(200, 0, 0, 0.1) 0%, transparent 50%);
+    }
 
-.card{
-    background:rgba(0,0,0,.55);
-    padding:35px;
-    border-radius:25px;
-    margin-bottom:25px;
-    box-shadow:0 0 30px #000;
-}
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
 
-h1{
-    text-align:center;
-    font-size:55px;
-}
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
 
-h2{
-    color:#60a5fa;
-}
+    .logo {
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
 
-p,li{
-    font-size:18px;
-    line-height:1.6;
-}
+    .logo span.drev { color: #cc0000; }
+    .logo span.smp  { color: #ff3333; }
 
-button{
-    background:#5865F2;
-    color:white;
-    border:0;
-    padding:14px 30px;
-    border-radius:12px;
-    cursor:pointer;
-    font-size:18px;
-}
+    .tagline {
+      color: #666;
+      font-size: 0.85rem;
+      margin-top: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
 
-button:hover{
-    transform:scale(1.05);
-}
+    /* Vote-Zähler */
+    .vote-counter {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
 
-.lang{
-    text-align:center;
-    margin-bottom:20px;
-}
+    .vote-label {
+      color: #555;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
 
-a{
-    color:white;
-    text-decoration:none;
-}
-</style>
+    .vote-number {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #cc0000;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .vote-sublabel {
+      color: #444;
+      font-size: 0.8rem;
+      margin-top: 6px;
+    }
+
+    /* Formular */
+    .card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.75rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      padding: 14px 16px;
+      outline: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    input[type="text"]::placeholder { color: #444; }
+
+    input[type="text"]:focus {
+      border-color: #cc0000;
+      background: rgba(204, 0, 0, 0.05);
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      margin-top: 16px;
+      padding: 15px;
+      background: #cc0000;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:hover  { background: #e60000; }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Spinner */
+    .btn .spinner {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Meldungen */
+    .message {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .message.success {
+      background: rgba(0, 180, 80, 0.1);
+      border: 1px solid rgba(0, 180, 80, 0.25);
+      color: #4dff91;
+    }
+
+    .message.error {
+      background: rgba(204, 0, 0, 0.1);
+      border: 1px solid rgba(204, 0, 0, 0.25);
+      color: #ff6666;
+    }
+
+    .message.warning {
+      background: rgba(255, 160, 0, 0.1);
+      border: 1px solid rgba(255, 160, 0, 0.25);
+      color: #ffcc44;
+    }
+
+    /* Cooldown-Timer */
+    .cooldown-box {
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px;
+      display: none;
+      text-align: center;
+    }
+
+    .cooldown-label { color: #555; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+    .cooldown-timer { font-size: 1.5rem; font-weight: 700; color: #cc0000; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+    /* Footer */
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      color: #333;
+      font-size: 0.75rem;
+    }
+
+    .footer a { color: #cc0000; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* Konfetti-Effekt */
+    @keyframes confetti-fall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+    .confetti-piece {
+      position: fixed;
+      width: 8px; height: 8px;
+      border-radius: 2px;
+      animation: confetti-fall linear forwards;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
 </head>
-
-
 <body>
 
 <div class="container">
 
+  <div class="header">
+    <div class="logo">
+      <span class="drev">Drev</span><span class="smp">Smp</span>
+    </div>
+    <p class="tagline">Vote &amp; Support uns</p>
+  </div>
 
-<div class="lang">
-<button onclick="de()">🇩🇪 Deutsch</button>
-<button onclick="en()">🇬🇧 English</button>
-</div>
+  <!-- Vote-Zähler -->
+  <div class="vote-counter">
+    <div class="vote-label">Gesamt Votes</div>
+    <div class="vote-number" id="voteCount">—</div>
+    <div class="vote-sublabel">Danke für eure Unterstützung ❤</div>
+  </div>
 
+  <!-- Formular -->
+  <div class="card">
+    <h2>Jetzt Voten</h2>
 
-<div class="card">
+    <label for="playerName">Dein Minecraft Name</label>
+    <input
+      type="text"
+      id="playerName"
+      placeholder="z.B. Steve"
+      maxlength="16"
+      autocomplete="off"
+      spellcheck="false"
+    />
 
-<h1>🌐 ServerHub</h1>
+    <button class="btn" id="voteBtn" onclick="submitVote()">
+      Voten ❤
+    </button>
 
-<h2 id="title">
-Die Zukunft der Discord Server Werbung
-</h2>
+    <div class="message" id="msg"></div>
+    <div class="cooldown-box" id="cooldownBox">
+      <div class="cooldown-label">Nächster Vote in</div>
+      <div class="cooldown-timer" id="cooldownTimer">—</div>
+    </div>
+  </div>
 
-<p id="desc">
-ServerHub verbindet Discord-Communities aus der ganzen Welt.
-Entdecke neue Server, bewirb deine eigene Community und finde
-Menschen mit gleichen Interessen.
-
-Egal ob Gaming, Minecraft, Streaming, Bots oder Communitys:
-ServerHub macht Discord-Server sichtbar und hilft ihnen zu wachsen.
-</p>
-
-<a href="https://discord.gg/YxYTbjRdXQ">
-<button>🚀 Discord beitreten</button>
-</a>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>📜 <span id="rulesTitle">Regeln</span></h2>
-
-<ul id="rules">
-
-<li>Respektiere alle Mitglieder.</li>
-<li>Kein Spam oder unerlaubte Werbung.</li>
-<li>Keine Fake-Informationen oder Betrug.</li>
-<li>Keine gefährlichen Links oder verbotene Inhalte.</li>
-<li>Befolge die Discord-Regeln.</li>
-
-</ul>
+  <div class="footer">
+    <a href="https://www.drevsmp.de">drevsmp.de</a> &bull; Minecraft Java Edition
+  </div>
 
 </div>
-
-
-
-<div class="card">
-
-<h2>📢 Advertising</h2>
-
-<p id="advert">
-Bewirb deinen Discord-Server mit einer professionellen Werbung.
-Deine Werbung sollte Servername, Kategorie, Beschreibung,
-Features und einen Einladungslink enthalten.
-</p>
-
-</div>
-
-
-
-<div class="card">
-
-<h2>💎 Premium Werbung</h2>
-
-<p id="premium">
-Mit Premium erhält dein Server mehr Sichtbarkeit.
-Premium-Server können besonders hervorgehoben werden
-und erreichen mehr Mitglieder weltweit.
-</p>
-
-</div>
-
-
-</div>
-
 
 <script>
+  // ============================================================
+  // KONFIGURATION — HIER ANPASSEN!
+  // ============================================================
+  const SERVER_IP   = "DEINE_SERVER_IP";   // z.B. "123.456.789.0"
+  const SERVER_PORT = 8123;                 // muss mit config.yml übereinstimmen
+  const SECRET      = "DrevSmpSecret2024"; // muss mit config.yml übereinstimmen
+  // ============================================================
 
-function de(){
+  const API_BASE = `http://${SERVER_IP}:${SERVER_PORT}`;
 
-document.getElementById("title").innerHTML=
-"Die Zukunft der Discord Server Werbung";
+  // Vote-Zähler beim Laden abrufen
+  async function loadVoteCount() {
+    try {
+      const res = await fetch(`${API_BASE}/votes`, { signal: AbortSignal.timeout(5000) });
+      if (res.ok) {
+        const data = await res.json();
+        animateNumber(document.getElementById('voteCount'), 0, data.totalVotes, 800);
+      } else {
+        document.getElementById('voteCount').textContent = '—';
+      }
+    } catch {
+      document.getElementById('voteCount').textContent = '—';
+    }
+  }
 
-document.getElementById("desc").innerHTML=
-"ServerHub verbindet Discord-Communities aus der ganzen Welt. Entdecke neue Server, bewirb deine eigene Community und finde Menschen mit gleichen Interessen. Egal ob Gaming, Minecraft, Streaming, Bots oder Communitys: ServerHub macht Discord-Server sichtbar und hilft ihnen zu wachsen.";
+  // Zahl animiert hochzählen
+  function animateNumber(el, from, to, duration) {
+    const start = performance.now();
+    function step(now) {
+      const t = Math.min((now - start) / duration, 1);
+      el.textContent = Math.round(from + (to - from) * easeOut(t)).toLocaleString('de-DE');
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
 
-document.getElementById("rulesTitle").innerHTML="Regeln";
+  function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
 
-document.getElementById("rules").innerHTML=
-"<li>Respektiere alle Mitglieder.</li>"+
-"<li>Kein Spam oder unerlaubte Werbung.</li>"+
-"<li>Keine Fake-Informationen oder Betrug.</li>"+
-"<li>Keine gefährlichen Links oder verbotene Inhalte.</li>"+
-"<li>Befolge die Discord-Regeln.</li>";
+  // Vote absenden
+  async function submitVote() {
+    const playerName = document.getElementById('playerName').value.trim();
+    const btn = document.getElementById('voteBtn');
+    const msg = document.getElementById('msg');
 
-document.getElementById("advert").innerHTML=
-"Bewirb deinen Discord-Server mit einer professionellen Werbung. Deine Werbung sollte Servername, Kategorie, Beschreibung, Features und einen Einladungslink enthalten.";
+    // Eingabe prüfen
+    if (!playerName) {
+      showMsg('error', '⚠ Bitte gib deinen Minecraft-Namen ein!');
+      return;
+    }
+    if (playerName.length < 3 || playerName.length > 16) {
+      showMsg('error', '⚠ Minecraft-Namen sind 3–16 Zeichen lang.');
+      return;
+    }
+    if (!/^[a-zA-Z0-9_]+$/.test(playerName)) {
+      showMsg('error', '⚠ Nur Buchstaben, Zahlen und _ erlaubt.');
+      return;
+    }
 
-document.getElementById("premium").innerHTML=
-"Mit Premium erhält dein Server mehr Sichtbarkeit. Premium-Server können besonders hervorgehoben werden und erreichen mehr Mitglieder weltweit.";
+    // Button deaktivieren & Spinner
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Sende Vote...';
+    msg.style.display = 'none';
+    document.getElementById('cooldownBox').style.display = 'none';
 
-}
+    try {
+      const res = await fetch(
+        `${API_BASE}/vote?player=${encodeURIComponent(playerName)}&token=${encodeURIComponent(SECRET)}`,
+        {
+          method: 'GET',
+          signal: AbortSignal.timeout(8000)
+        }
+      );
 
+      const data = await res.json();
 
+      if (data.success) {
+        showMsg('success', `✅ Vote erfolgreich! Danke ${playerName}! ❤\nDeine Unterstützung wird im Server-Chat angezeigt.`);
+        animateNumber(document.getElementById('voteCount'), data.totalVotes - 1, data.totalVotes, 600);
+        spawnConfetti();
+        startCooldownTimer(12 * 3600);
+        btn.textContent = '✓ Gevoted!';
+      } else if (data.cooldown) {
+        const h = data.hours || 0;
+        const m = data.minutes || 0;
+        showMsg('warning', `⏳ Du hast bereits gevoted.\nNächster Vote in: ${h}h ${m}m`);
+        startCooldownTimer(h * 3600 + m * 60);
+        btn.disabled = false;
+        btn.textContent = 'Voten ❤';
+      } else {
+        showMsg('error', `❌ Fehler: ${data.message || 'Unbekannter Fehler'}`);
+        btn.disabled = false;
+        btn.textContent = 'Voten ❤';
+      }
+    } catch (err) {
+      showMsg('error',
+        '❌ Server nicht erreichbar.\n' +
+        'Stelle sicher dass Port ' + SERVER_PORT + ' in der Firewall offen ist.'
+      );
+      btn.disabled = false;
+      btn.textContent = 'Voten ❤';
+    }
+  }
 
-function en(){
+  function showMsg(type, text) {
+    const el = document.getElementById('msg');
+    el.className = 'message ' + type;
+    el.style.display = 'block';
+    el.style.whiteSpace = 'pre-line';
+    el.textContent = text;
+  }
 
-document.getElementById("title").innerHTML=
-"The future of Discord server advertising";
+  // Cooldown-Timer
+  let cdInterval = null;
+  function startCooldownTimer(seconds) {
+    const box = document.getElementById('cooldownBox');
+    const timer = document.getElementById('cooldownTimer');
+    box.style.display = 'block';
 
-document.getElementById("desc").innerHTML=
-"ServerHub connects Discord communities from around the world. Discover new servers, promote your own community and find people with the same interests. Whether gaming, Minecraft, streaming, bots or communities: ServerHub helps servers grow and become visible.";
+    if (cdInterval) clearInterval(cdInterval);
+    let remaining = seconds;
 
-document.getElementById("rulesTitle").innerHTML="Rules";
+    function update() {
+      if (remaining <= 0) {
+        clearInterval(cdInterval);
+        box.style.display = 'none';
+        document.getElementById('voteBtn').disabled = false;
+        document.getElementById('voteBtn').textContent = 'Voten ❤';
+        return;
+      }
+      const h = Math.floor(remaining / 3600);
+      const m = Math.floor((remaining % 3600) / 60);
+      const s = remaining % 60;
+      timer.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      remaining--;
+    }
 
-document.getElementById("rules").innerHTML=
-"<li>Respect all members.</li>"+
-"<li>No spam or unauthorized advertising.</li>"+
-"<li>No fake information or scams.</li>"+
-"<li>No dangerous links or forbidden content.</li>"+
-"<li>Follow Discord rules.</li>";
+    update();
+    cdInterval = setInterval(update, 1000);
+  }
 
-document.getElementById("advert").innerHTML=
-"Promote your Discord server with a professional advertisement. Your advertisement should include server name, category, description, features and an invite link.";
+  // Enter-Taste
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('playerName').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitVote();
+    });
+    loadVoteCount();
+  });
 
-document.getElementById("premium").innerHTML=
-"Premium gives your server more visibility. Premium servers can be highlighted and reach more members worldwide.";
-
-}
-
+  // Konfetti
+  function spawnConfetti() {
+    const colors = ['#cc0000','#ff3333','#ff6666','#ffffff','#ffcc00'];
+    for (let i = 0; i < 60; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '-10px';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      el.style.animationDelay = (Math.random() * 0.5) + 's';
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+  }
 </script>
 
 </body>
