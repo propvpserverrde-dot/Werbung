@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ServerHub</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#050505,#1e40af);
+    color:white;
+}
+
+.container{
+    max-width:900px;
+    margin:50px auto;
+    padding:30px;
+}
+
+.card{
+    background:rgba(0,0,0,.55);
+    padding:35px;
+    border-radius:25px;
+    margin-bottom:25px;
+    box-shadow:0 0 30px #000;
+}
+
+h1{
+    text-align:center;
+    font-size:55px;
+}
+
+h2{
+    color:#60a5fa;
+}
+
+p,li{
+    font-size:18px;
+    line-height:1.6;
+}
+
+button{
+    background:#5865F2;
+    color:white;
+    border:0;
+    padding:14px 30px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:18px;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+.lang{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+a{
+    color:white;
+    text-decoration:none;
+}
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<div class="lang">
+<button onclick="de()">🇩🇪 Deutsch</button>
+<button onclick="en()">🇬🇧 English</button>
+</div>
+
+
+<div class="card">
+
+<h1>🌐 ServerHub</h1>
+
+<h2 id="title">
+Die Zukunft der Discord Server Werbung
+</h2>
+
+<p id="desc">
+ServerHub verbindet Discord-Communities aus der ganzen Welt.
+Entdecke neue Server, bewirb deine eigene Community und finde
+Menschen mit gleichen Interessen.
+
+Egal ob Gaming, Minecraft, Streaming, Bots oder Communitys:
+ServerHub macht Discord-Server sichtbar und hilft ihnen zu wachsen.
+</p>
+
+<a href="https://discord.gg/YxYTbjRdXQ">
+<button>🚀 Discord beitreten</button>
+</a>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>📜 <span id="rulesTitle">Regeln</span></h2>
+
+<ul id="rules">
+
+<li>Respektiere alle Mitglieder.</li>
+<li>Kein Spam oder unerlaubte Werbung.</li>
+<li>Keine Fake-Informationen oder Betrug.</li>
+<li>Keine gefährlichen Links oder verbotene Inhalte.</li>
+<li>Befolge die Discord-Regeln.</li>
+
+</ul>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>📢 Advertising</h2>
+
+<p id="advert">
+Bewirb deinen Discord-Server mit einer professionellen Werbung.
+Deine Werbung sollte Servername, Kategorie, Beschreibung,
+Features und einen Einladungslink enthalten.
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>💎 Premium Werbung</h2>
+
+<p id="premium">
+Mit Premium erhält dein Server mehr Sichtbarkeit.
+Premium-Server können besonders hervorgehoben werden
+und erreichen mehr Mitglieder weltweit.
+</p>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+function de(){
+
+document.getElementById("title").innerHTML=
+"Die Zukunft der Discord Server Werbung";
+
+document.getElementById("desc").innerHTML=
+"ServerHub verbindet Discord-Communities aus der ganzen Welt. Entdecke neue Server, bewirb deine eigene Community und finde Menschen mit gleichen Interessen. Egal ob Gaming, Minecraft, Streaming, Bots oder Communitys: ServerHub macht Discord-Server sichtbar und hilft ihnen zu wachsen.";
+
+document.getElementById("rulesTitle").innerHTML="Regeln";
+
+document.getElementById("rules").innerHTML=
+"<li>Respektiere alle Mitglieder.</li>"+
+"<li>Kein Spam oder unerlaubte Werbung.</li>"+
+"<li>Keine Fake-Informationen oder Betrug.</li>"+
+"<li>Keine gefährlichen Links oder verbotene Inhalte.</li>"+
+"<li>Befolge die Discord-Regeln.</li>";
+
+document.getElementById("advert").innerHTML=
+"Bewirb deinen Discord-Server mit einer professionellen Werbung. Deine Werbung sollte Servername, Kategorie, Beschreibung, Features und einen Einladungslink enthalten.";
+
+document.getElementById("premium").innerHTML=
+"Mit Premium erhält dein Server mehr Sichtbarkeit. Premium-Server können besonders hervorgehoben werden und erreichen mehr Mitglieder weltweit.";
+
+}
+
+
+
+function en(){
+
+document.getElementById("title").innerHTML=
+"The future of Discord server advertising";
+
+document.getElementById("desc").innerHTML=
+"ServerHub connects Discord communities from around the world. Discover new servers, promote your own community and find people with the same interests. Whether gaming, Minecraft, streaming, bots or communities: ServerHub helps servers grow and become visible.";
+
+document.getElementById("rulesTitle").innerHTML="Rules";
+
+document.getElementById("rules").innerHTML=
+"<li>Respect all members.</li>"+
+"<li>No spam or unauthorized advertising.</li>"+
+"<li>No fake information or scams.</li>"+
+"<li>No dangerous links or forbidden content.</li>"+
+"<li>Follow Discord rules.</li>";
+
+document.getElementById("advert").innerHTML=
+"Promote your Discord server with a professional advertisement. Your advertisement should include server name, category, description, features and an invite link.";
+
+document.getElementById("premium").innerHTML=
+"Premium gives your server more visibility. Premium servers can be highlighted and reach more members worldwide.";
+
+}
+
+</script>
+
+</body>
+</html>
