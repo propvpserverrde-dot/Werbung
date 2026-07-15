@@ -29,7 +29,6 @@
       max-width: 480px;
     }
 
-    /* Header */
     .header {
       text-align: center;
       margin-bottom: 40px;
@@ -53,7 +52,6 @@
       text-transform: uppercase;
     }
 
-    /* Vote-Zähler */
     .vote-counter {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.06);
@@ -85,7 +83,6 @@
       margin-top: 6px;
     }
 
-    /* Formular */
     .card {
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.06);
@@ -144,8 +141,6 @@
       border-radius: 10px;
       cursor: pointer;
       transition: background 0.2s, transform 0.1s;
-      position: relative;
-      overflow: hidden;
     }
 
     .btn:hover  { background: #e60000; }
@@ -157,7 +152,6 @@
       transform: none;
     }
 
-    /* Spinner */
     .btn .spinner {
       display: inline-block;
       width: 16px; height: 16px;
@@ -171,7 +165,6 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* Meldungen */
     .message {
       margin-top: 16px;
       padding: 14px 16px;
@@ -179,6 +172,7 @@
       font-size: 0.875rem;
       line-height: 1.5;
       display: none;
+      white-space: pre-line;
     }
 
     .message.success {
@@ -199,7 +193,6 @@
       color: #ffcc44;
     }
 
-    /* Cooldown-Timer */
     .cooldown-box {
       margin-top: 16px;
       padding: 14px 16px;
@@ -213,7 +206,6 @@
     .cooldown-label { color: #555; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
     .cooldown-timer { font-size: 1.5rem; font-weight: 700; color: #cc0000; margin-top: 4px; font-variant-numeric: tabular-nums; }
 
-    /* Footer */
     .footer {
       margin-top: 32px;
       text-align: center;
@@ -224,7 +216,6 @@
     .footer a { color: #cc0000; text-decoration: none; }
     .footer a:hover { text-decoration: underline; }
 
-    /* Konfetti-Effekt */
     @keyframes confetti-fall {
       0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
       100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
@@ -251,14 +242,12 @@
     <p class="tagline">Vote &amp; Support uns</p>
   </div>
 
-  <!-- Vote-Zähler -->
   <div class="vote-counter">
     <div class="vote-label">Gesamt Votes</div>
     <div class="vote-number" id="voteCount">—</div>
     <div class="vote-sublabel">Danke für eure Unterstützung ❤</div>
   </div>
 
-  <!-- Formular -->
   <div class="card">
     <h2>Jetzt Voten</h2>
 
@@ -290,17 +279,13 @@
 </div>
 
 <script>
-  // ============================================================
-  // KONFIGURATION — HIER ANPASSEN!
-  // ============================================================
-  const SERVER_IP   = "DEINE_SERVER_IP";   // z.B. "123.456.789.0"
-  const SERVER_PORT = 8123;                 // muss mit config.yml übereinstimmen
-  const SECRET      = "DrevSmpSecret2024"; // muss mit config.yml übereinstimmen
-  // ============================================================
+  // Deine Server-Daten (bereits eingetragen!)
+  const SERVER_IP   = "144.76.112.251";
+  const SERVER_PORT = 43084;
+  const SECRET      = "DrevSmpSecret2024";
 
   const API_BASE = `http://${SERVER_IP}:${SERVER_PORT}`;
 
-  // Vote-Zähler beim Laden abrufen
   async function loadVoteCount() {
     try {
       const res = await fetch(`${API_BASE}/votes`, { signal: AbortSignal.timeout(5000) });
@@ -315,7 +300,6 @@
     }
   }
 
-  // Zahl animiert hochzählen
   function animateNumber(el, from, to, duration) {
     const start = performance.now();
     function step(now) {
@@ -328,13 +312,11 @@
 
   function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
 
-  // Vote absenden
   async function submitVote() {
     const playerName = document.getElementById('playerName').value.trim();
     const btn = document.getElementById('voteBtn');
     const msg = document.getElementById('msg');
 
-    // Eingabe prüfen
     if (!playerName) {
       showMsg('error', '⚠ Bitte gib deinen Minecraft-Namen ein!');
       return;
@@ -348,7 +330,6 @@
       return;
     }
 
-    // Button deaktivieren & Spinner
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Sende Vote...';
     msg.style.display = 'none';
@@ -357,10 +338,7 @@
     try {
       const res = await fetch(
         `${API_BASE}/vote?player=${encodeURIComponent(playerName)}&token=${encodeURIComponent(SECRET)}`,
-        {
-          method: 'GET',
-          signal: AbortSignal.timeout(8000)
-        }
+        { method: 'GET', signal: AbortSignal.timeout(8000) }
       );
 
       const data = await res.json();
@@ -384,10 +362,7 @@
         btn.textContent = 'Voten ❤';
       }
     } catch (err) {
-      showMsg('error',
-        '❌ Server nicht erreichbar.\n' +
-        'Stelle sicher dass Port ' + SERVER_PORT + ' in der Firewall offen ist.'
-      );
+      showMsg('error', '❌ Server nicht erreichbar.\nStelle sicher dass Port 43084 im Hoster-Panel freigegeben ist.');
       btn.disabled = false;
       btn.textContent = 'Voten ❤';
     }
@@ -397,17 +372,14 @@
     const el = document.getElementById('msg');
     el.className = 'message ' + type;
     el.style.display = 'block';
-    el.style.whiteSpace = 'pre-line';
     el.textContent = text;
   }
 
-  // Cooldown-Timer
   let cdInterval = null;
   function startCooldownTimer(seconds) {
     const box = document.getElementById('cooldownBox');
     const timer = document.getElementById('cooldownTimer');
     box.style.display = 'block';
-
     if (cdInterval) clearInterval(cdInterval);
     let remaining = seconds;
 
@@ -430,7 +402,6 @@
     cdInterval = setInterval(update, 1000);
   }
 
-  // Enter-Taste
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('playerName').addEventListener('keydown', e => {
       if (e.key === 'Enter') submitVote();
@@ -438,7 +409,6 @@
     loadVoteCount();
   });
 
-  // Konfetti
   function spawnConfetti() {
     const colors = ['#cc0000','#ff3333','#ff6666','#ffffff','#ffcc00'];
     for (let i = 0; i < 60; i++) {
